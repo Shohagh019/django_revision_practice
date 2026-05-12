@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from first_app.forms import LoginForm
+from first_app.forms import LoginForm, DetailsForm
 
 def about(request):
     return render(request, 'about.html')
@@ -8,13 +8,23 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 def login(request):
-    form = LoginForm()
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            # Process the login logic here
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            print(f"Username: {username}, Password: {password}")
-            # You can authenticate the user here and redirect as needed         
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        print(form.cleaned_data)
     return render(request, 'login.html', {'form': form})
+
+
+def details(request):
+    if request.method == 'POST':
+        form = DetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.cleaned_data['file']
+            with open('./first_app/upload/' + file.name, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            print(form.cleaned_data)
+            return render(request, 'details.html', {'form': form})
+    else:
+        form = DetailsForm()
+    return render(request, 'details.html', {'form': form})
+

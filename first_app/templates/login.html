@@ -3,11 +3,12 @@
 {% block navbar %}{% endblock %}
 
 {% block content %}
+{% load crispy_forms_tags %}
     <h1>Login</h1>
     <p>This is the login page.</p>
-    <form method="post">
+    <form method="post" style="width: 50%; height: 500px; margin: auto; border: 1px solid black; padding: 20px; ">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 {% endblock %}
